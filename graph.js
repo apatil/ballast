@@ -66,8 +66,8 @@ var waterline = graph.append("svg:path").attr("d", line([[-30, 0], [30, 0]]))
 
 var plotLine = function(ballast) {
     var attitude = computeAttitude(ballast);
-    d3.select("#frontdepth").text(-attitude[0][1] * 12);
-    d3.select("#reardepth").text(-attitude[1][1] * 12);
+    d3.select("#frontdepth").text((-attitude[0][1] * 12).toFixed(1));
+    d3.select("#reardepth").text((-attitude[1][1] * 12).toFixed(1));
     path.attr("d", line(attitude))
 }
 
@@ -123,6 +123,6 @@ var computeAttitude = function(ballast) {
 plotLine(2500);
 
 d3.select('#slider').call(d3.slider().value(2500).axis(true).min(0).max(7500).on("slide", function(evt, value) {
-        d3.select("#ballastamount").text(value);
+        d3.select("#ballastamount").text(Math.round(value));
         plotLine(value);
     }));
