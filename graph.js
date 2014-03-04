@@ -13,12 +13,12 @@ var y = d3.scale.linear().domain([1, -5]).range([0, h]);
 // create a line function that can convert data[] into x and y points
 var line = d3.svg.line()
     .x(function(d) {
-        console.log("X got", d);
-        return d.date;
+        console.log("X got", d, " returning ", d[0]);
+        return x(d[0]);
     })
     .y(function(d) {
-        console.log("Y got", d);
-        return d.close;
+        console.log("Y got", d, " returning ", d[1]);
+        return y(d[1]);
     })
 
 // Add an SVG element with the desired dimensions and margin.
@@ -48,13 +48,13 @@ graph.append("svg:g")
 // Add the line by appending an svg:path element with the data line we created above
 // do this AFTER the axes above so that the line is above the tick-lines
 var path = graph.append("svg:path");
+var waterline = graph.append("svg:path").attr("d", line([[-30, 0], [30, 0]]))
 
 var plotLine = function(ballast) {
     var fb = computeAttitude(ballast);
-    var frontDepth = fb[0];
+    var frontDepth = ballast / 5000;
     var backDepth = fb[1];
-    console.log("HELLO")
-    path.datum({date: [0,1], close: [2,3]}).attr("d", line)
+    path.attr("d", line([[-25,-backDepth], [25,-frontDepth]]))
 }
 
 var computeAttitude = function(ballast) {
