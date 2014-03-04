@@ -86,22 +86,25 @@ var computeAttitude = function(ballast) {
     // Internally, mass is tons and distance is meters.
     var ballast_weight = ballast / ton_to_pound;
 
-    console.log(empty_weight)
+
     // From sympy
     var l=length, lb=ballast_cm, mb=ballast_weight, rho=water_density, w=width;
     var df = front_depth, dr = back_depth;
-    var me = 1/2*(2*df + dr)*l*rho*w;
+    var me = 1/2*(df + dr)*l*rho*w;
     var empty_weight = me;
     var lc = 1/3*(2*df + dr)*l/(df + dr);
 
-    console.log("Empty center of mass", lc * meter_to_inch / 12)
-    var ballasted_front_depth = df = -2/3*((l - 3*lb)*mb + l*me - 3*lc*me)/(l*lc*rho*w);
-    var ballasted_back_depth = dr = 2/3*((2*l - 6*lb + 3*lc)*mb + 2*l*me - 3*lc*me)/(l*lc*rho*w);
+    // console.log("Empty center of mass", lc * meter_to_inch / 12)
+    var ballasted_front_depth = df = -2*((l - 3*lb)*mb + l*me - 3*lc*me)/(l*l*rho*w);
+    var ballasted_back_depth = dr = 2*((2*l - 3*lb)*mb + 2*l*me - 3*lc*me)/(l*l*rho*w);
 
-    var avg_depth = df + dr / 2
+    // console.log({me: me, lc: lc, mb: mb, rho: rho, w: w, dr: dr, df: df, l: l})
+
+    var avg_depth = (df + dr) / 2
+    // console.log("Average depth", avg_depth * meter_to_inch)
     // console.log("force balance", rho * w * avg_depth * l - empty_weight - ballast_weight)
     // console.log("torque balance", 1/6*((2*df + dr)*l*l - 3*(df + dr)*l*lc)*rho*w-(lb-lc)*mb)
-    var baseplateAngle = Math.atan2(dr-df, length) * 180 / Math.PI
+    // var baseplateAngle = Math.atan2(dr-df, length) * 180 / Math.PI
     // d3.select("#angle").text(baseplateAngle)
     return [
         [
